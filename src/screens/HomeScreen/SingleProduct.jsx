@@ -33,45 +33,33 @@ const SingleProduct = ({ product }) => {
   const [loading, setLoading] = useState(true);
 
   const addtoCatPress = async () => {
-    const originalMRP = (
-      Number(product?.price) /
-      (1 - Number(product?.discountPercentage) / 100)
-    ).toFixed(2);
     const cart_form = {
       ProductName: product?.title,
-      ProductId: product?.id,
-      thumbnail: product?.images[0],
-      Mrp: Number(product?.price),
-      Price: Number(product?.price),
-      Product_total_Mrp: Number(product?.price) * 1,
-      Product_total_Price: Number(product?.price) * 1,
-      Product_total_Saving: (
-        Number(product?.price) * 1 -
-        Number(product?.price) * 1
-      ).toFixed(2),
-      Discount: Number(product?.discountPercentage),
+      ProductId: product?.productId,
+      thumbnail: 'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
+      Mrp: Number(100),
+      Price: Number(100),
+      Product_total_Mrp: Number(100) * 1,
+      Product_total_Price: Number(100) * 1,
+      Product_total_Saving: (Number(100) * 1 - Number(100) * 1).toFixed(2),
+      Discount: Number(1),
       cart_Quentity: 1,
     };
+    console.log(cart_form, 'cart_form');
+
     const cart = await dispatch(addToCartAndPersist(cart_form));
   };
   const decrementtoCatPress = async () => {
-    const originalMRP = (
-      Number(product?.price) /
-      (1 - Number(product?.discountPercentage) / 100)
-    ).toFixed(2);
     const cart_form = {
       ProductName: product?.title,
-      ProductId: product?.id,
-      thumbnail: product?.images[0],
-      Mrp: Number(product?.price),
-      Price: Number(product?.price),
-      Product_total_Mrp: Number(product?.price) * 1,
-      Product_total_Price: Number(product?.price) * 1,
-      Product_total_Saving: (
-        Number(product?.price) * 1 -
-        Number(product?.price) * 1
-      ).toFixed(2),
-      Discount: Number(product?.discountPercentage),
+      ProductId: product?.productId,
+      thumbnail: 'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
+      Mrp: Number(100),
+      Price: Number(100),
+      Product_total_Mrp: Number(100) * 1,
+      Product_total_Price: Number(100) * 1,
+      Product_total_Saving: (Number(100) * 1 - Number(100) * 1).toFixed(2),
+      Discount: Number(1),
       cart_Quentity: 1,
     };
     const cart = await dispatch(decrementCart(cart_form));
@@ -79,14 +67,14 @@ const SingleProduct = ({ product }) => {
 
   const addtoWishlistPress = async () => {
     const cart_form = {
-      ProductId: product?.id,
+      ProductId: product?.productId,
       wishStatus: true,
     };
     const cart = await dispatch(addToWishlist(cart_form));
   };
   const removetoWishlistPress = async () => {
     const cart_form = {
-      ProductId: product?.id,
+      ProductId: product?.productId,
       wishStatus: false,
     };
     const cart = await dispatch(removefromWishlist(cart_form));
@@ -134,7 +122,7 @@ const SingleProduct = ({ product }) => {
             <FastImage
               style={styles.imageView}
               source={{
-                uri: product?.images[0],
+                uri: 'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
                 priority: FastImage.priority.normal,
               }}
               resizeMode={FastImage.resizeMode.cover}
@@ -150,7 +138,7 @@ const SingleProduct = ({ product }) => {
           {product?.title}
         </Text>
         <Text style={styles.ProductTextPack} numberOfLines={1}>
-          {product?.category?.name}
+          {product?.shortDescription}
         </Text>
 
         <View style={styles.cardMainBox}>
@@ -159,7 +147,7 @@ const SingleProduct = ({ product }) => {
               {product?.discountPercentage} %
             </Text> */}
             <Text style={styles.ProductTextPrice} numberOfLines={1}>
-              ₹ {product?.price}
+              ₹ 100
             </Text>
           </View>
           {product?.cart_Quentity === 0 ? (

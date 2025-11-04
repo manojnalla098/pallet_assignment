@@ -38,7 +38,7 @@ const ShowProductColoum = ({ products }) => {
   }, []);
 
   const keyExtractor = useCallback((item, index) => {
-    return `${item?.id ?? 'item'}-${index}`;
+    return `${item?.productId ?? 'item'}-${index}`;
   }, []);
 
   const getItemLayout = useCallback(

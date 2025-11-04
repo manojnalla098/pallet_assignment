@@ -55,10 +55,10 @@ const HomeScreen = () => {
     if (!products?.length) return;
     const updated = products.map(product => {
       const cartItem = CartItems?.find(
-        item => String(item.ProductId) === String(product.id),
+        item => String(item.ProductId) === String(product.productId),
       );
       const wishItem = Wishlist?.find(
-        item => String(item.ProductId) === String(product.id),
+        item => String(item.ProductId) === String(product.productId),
       );
 
       return {

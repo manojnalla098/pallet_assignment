@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Baseurl = 'https://api.escuelajs.co/api/v1/products';
+const Baseurl =
+  'https://catalog-management-system-dev-ak3ogf6zea-uc.a.run.app/cms/product/v2/filter/product';
 
 const initialState = {
   producttotal: [],
@@ -15,21 +16,25 @@ export const getProduct = createAsyncThunk(
   'product/getProduct',
   async (page = 1, thunkAPI) => {
     try {
-      // Pagination: convert page number to offset
-      const limit = 10;
-      const offset = (page - 1) * limit;
-
-      const response = await axios.get(Baseurl, {
-        params: { offset, limit },
-        headers: {
-          accept: 'application/json',
+      const body = {
+        page: String(page),
+        pageSize: '10',
+        sort: {
+          creationDateSortOption: 'DESC',
         },
-      });
+      };
 
+      const headers = {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-internal-call': 'true',
+      };
+
+      const response = await axios.post(Baseurl, body, { headers });
       return { data: response.data, page };
     } catch (error) {
       console.log(
-        'Product API Error:',
+        '❌ Product API Error:',
         error.response ? error.response.data : error.message,
       );
       return thunkAPI.rejectWithValue('Failed to fetch products');
@@ -67,9 +72,9 @@ const ProductSlice = createSlice({
         const { data, page } = action.payload;
 
         if (page === 1) {
-          state.producttotal = data;
+          state.producttotal = data?.data?.data;
         } else {
-          state.producttotal = [...state.producttotal, ...data];
+          state.producttotal = [...state.producttotal, ...data?.data?.data];
         }
 
         state.productLoading = false;

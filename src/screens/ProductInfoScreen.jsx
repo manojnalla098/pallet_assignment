@@ -56,7 +56,12 @@ const ProductInfoScreen = ({ route }) => {
   const { Wishlist } = useSelector(store => store.wishlist);
 
   const [productifo, setProductinfo] = useState('');
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([
+    'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
+    'https://kiranaworld.in/Admin/Products/Desktop/3015683.jpg',
+    'https://kiranaworld.in/Admin/Products/Desktop/3008590.jpg',
+    'https://kiranaworld.in/Admin/Products/Desktop/3000404.jpg',
+  ]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const imageList = [images[images.length - 1], ...images, images[0]];
@@ -65,9 +70,9 @@ const ProductInfoScreen = ({ route }) => {
   const isInWishlist = useMemo(() => {
     if (!route?.params?.id || !Array.isArray(Wishlist)) return false;
     return Wishlist.some(
-      item => String(item.ProductId) === String(route.params.id),
+      item => String(item.ProductId) === String(route.params.productId),
     );
-  }, [Wishlist, route?.params?.id]);
+  }, [Wishlist, route?.params?.productId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -83,7 +88,7 @@ const ProductInfoScreen = ({ route }) => {
     if (!route?.params) return;
     const updatedProduct = route.params;
     const cartItem = CartItems?.find(
-      item => String(item.ProductId) === String(updatedProduct.id),
+      item => String(item.ProductId) === String(updatedProduct.productId),
     );
 
     const productWithQty = {
@@ -92,7 +97,6 @@ const ProductInfoScreen = ({ route }) => {
     };
 
     setProductinfo(productWithQty);
-    setImages(route.params?.images || []);
   }, [route?.params, CartItems]);
 
   const handleScrollEnd = event => {
@@ -117,45 +121,31 @@ const ProductInfoScreen = ({ route }) => {
   };
 
   const addtoCatPress = async () => {
-    const originalMRP = (
-      Number(productifo?.price) /
-      (1 - Number(productifo?.discountPercentage) / 100)
-    ).toFixed(2);
     const cart_form = {
       ProductName: productifo?.title,
-      ProductId: productifo?.id,
-      thumbnail: productifo?.images[0],
-      Mrp: Number(productifo?.price),
-      Price: Number(productifo?.price),
-      Product_total_Mrp: Number(productifo?.price) * 1,
-      Product_total_Price: Number(productifo?.price) * 1,
-      Product_total_Saving: (
-        Number(productifo?.price) * 1 -
-        Number(productifo?.price) * 1
-      ).toFixed(2),
-      Discount: Number(productifo?.discountPercentage),
+      ProductId: productifo?.productId,
+      thumbnail: 'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
+      Mrp: Number(100),
+      Price: Number(100),
+      Product_total_Mrp: Number(100) * 1,
+      Product_total_Price: Number(100) * 1,
+      Product_total_Saving: (Number(100) * 1 - Number(100) * 1).toFixed(2),
+      Discount: Number(1),
       cart_Quentity: 1,
     };
     const cart = await dispatch(addToCartAndPersist(cart_form));
   };
   const decrementtoCatPress = async () => {
-    const originalMRP = (
-      Number(productifo?.price) /
-      (1 - Number(productifo?.discountPercentage) / 100)
-    ).toFixed(2);
     const cart_form = {
       ProductName: productifo?.title,
-      ProductId: productifo?.id,
-      thumbnail: productifo?.images[0],
-      Mrp: Number(productifo?.price),
-      Price: Number(productifo?.price),
-      Product_total_Mrp: Number(productifo?.price) * 1,
-      Product_total_Price: Number(productifo?.price) * 1,
-      Product_total_Saving: (
-        Number(productifo?.price) * 1 -
-        Number(productifo?.price) * 1
-      ).toFixed(2),
-      Discount: Number(productifo?.discountPercentage),
+      ProductId: productifo?.productId,
+      thumbnail: 'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg',
+      Mrp: Number(100),
+      Price: Number(100),
+      Product_total_Mrp: Number(100) * 1,
+      Product_total_Price: Number(100) * 1,
+      Product_total_Saving: (Number(100) * 1 - Number(100) * 1).toFixed(2),
+      Discount: Number(1),
       cart_Quentity: 1,
     };
     const cart = await dispatch(decrementCart(cart_form));
@@ -163,14 +153,14 @@ const ProductInfoScreen = ({ route }) => {
 
   const addtoWishlistPress = async () => {
     const cart_form = {
-      ProductId: productifo?.id,
+      ProductId: productifo?.productId,
       wishStatus: true,
     };
     const cart = await dispatch(addToWishlist(cart_form));
   };
   const removetoWishlistPress = async () => {
     const cart_form = {
-      ProductId: productifo?.id,
+      ProductId: productifo?.productId,
       wishStatus: false,
     };
     const cart = await dispatch(removefromWishlist(cart_form));
@@ -178,12 +168,8 @@ const ProductInfoScreen = ({ route }) => {
 
   const shareToWhatsApp = async () => {
     try {
-      if (!productifo?.images[0]) {
-        Alert.alert('Error', 'No image found.');
-        return;
-      }
-
-      const imageUrl = productifo?.images[0];
+      const imageUrl =
+        'https://kiranaworld.in/Admin/Products/Desktop/3008338.jpg';
       const fileName = `share_${Date.now()}.jpg`;
       const filePath = `${RNFS.CachesDirectoryPath}/${fileName}`;
 
@@ -205,6 +191,28 @@ const ProductInfoScreen = ({ route }) => {
       await Share.shareSingle(shareOptions);
     } catch (error) {}
   };
+
+  useEffect(() => {
+    const handleBackButtonClick = () => {
+      navigation.navigate('home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackButtonClick,
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      e.preventDefault();
+      navigation.navigate('home');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <>
@@ -294,7 +302,7 @@ const ProductInfoScreen = ({ route }) => {
               {productifo?.title}
             </Text>
             <Text style={styles.ProductTextPack} numberOfLines={1}>
-              {productifo?.category?.name}
+              {productifo?.shortDescription}
             </Text>
             <View style={styles.pricecontainer}>
               <View style={styles.cardMainValuePriceBox}>
@@ -302,7 +310,7 @@ const ProductInfoScreen = ({ route }) => {
                   {productifo?.discountPercentage} %
                 </Text> */}
                 <Text style={styles.ProductTextPrice} numberOfLines={1}>
-                  ₹ {productifo?.price}
+                  ₹ 100
                 </Text>
               </View>
               {productifo?.cart_Quentity === 0 ? (

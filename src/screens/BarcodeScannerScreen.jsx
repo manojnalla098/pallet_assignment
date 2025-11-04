@@ -8,16 +8,20 @@ import {
   TextInput,
   Button,
   Linking,
+  BackHandler,
 } from 'react-native';
 import {
   Camera,
   useCameraDevices,
   useCodeScanner,
 } from 'react-native-vision-camera';
-import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Added useFocusEffect for re-checking on focus
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 const BarcodeScannerScreen = () => {
   const navigation = useNavigation();
+  const { producttotal } = useSelector(state => state.product, shallowEqual);
+
   const [hasPermission, setHasPermission] = useState(false);
   const [torchEnabled, setTorchEnabled] = useState(false);
   const [manualBarcode, setManualBarcode] = useState('');
@@ -25,6 +29,28 @@ const BarcodeScannerScreen = () => {
   const cameraRef = useRef(null);
   const devices = useCameraDevices();
   const device = devices.find(d => d?.position === 'back');
+
+  useEffect(() => {
+    const handleBackButtonClick = () => {
+      navigation.navigate('home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackButtonClick,
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      e.preventDefault();
+      navigation.navigate('home');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const requestCameraPermission = async () => {
     try {
@@ -62,25 +88,27 @@ const BarcodeScannerScreen = () => {
     onCodeScanned: async codes => {
       if (codes.length > 0 && isScanning) {
         const barcode = codes[0].value;
-        Alert.alert('Error', `your barcode is ${barcode}`);
+        // Alert.alert('Error', `your barcode is ${barcode}`);
         setIsScanning(false);
         try {
-          const response = await fetch(
-            `https://api.example.com/products/${barcode}`,
+          const findProduct = producttotal.find(
+            product => product?.variants[0]?.barcodes[0] === barcode,
           );
-          if (response.ok) {
-            const product = await response.json();
-            navigation.navigate('ProductDetails', { product });
+          // const response = await fetch(
+          //   `https://api.example.com/products/${barcode}`,
+          // );
+          if (findProduct) {
+            navigation.navigate('ProductInfo', findProduct);
           } else {
             Alert.alert(
               'Product Not Found',
-              'No product found for this barcode.',
+              `No product found for this ${barcode} barcode.`,
             );
             setIsScanning(true);
           }
         } catch (error) {
           console.error('API error:', error);
-        //   Alert.alert('Error', 'Failed to fetch product details.');
+          //   Alert.alert('Error', 'Failed to fetch product details.');
           setIsScanning(true);
         }
       }
@@ -97,14 +125,20 @@ const BarcodeScannerScreen = () => {
       return;
     }
     try {
-      const response = await fetch(
-        `https://api.example.com/products/${manualBarcode}`,
-      ); // Replace with your API
-      if (response.ok) {
-        const product = await response.json();
-        navigation.navigate('ProductDetails', { product });
+      const findProduct = producttotal.find(
+        product => product?.variants[0]?.barcodes[0] === manualBarcode,
+      );
+      // const response = await fetch(
+      //   `https://api.example.com/products/${barcode}`,
+      // );
+      if (findProduct) {
+        navigation.navigate('ProductInfo', findProduct);
       } else {
-        Alert.alert('Product Not Found', 'No product found for this barcode.');
+        Alert.alert(
+          'Product Not Found',
+          `No product found for this ${manualBarcode} barcode.`,
+        );
+        setIsScanning(true);
       }
     } catch (error) {
       console.error('API error:', error);
@@ -193,6 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    color: '#fff',
   },
   text: {
     fontSize: 18,

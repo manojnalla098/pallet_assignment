@@ -23,10 +23,10 @@ const CartHeader = props => {
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Pressable
               onPress={() => {
-                navigation.goBack();
+                navigation.navigate('home');
               }}
               onFocus={() => {
-                navigation.goBack();
+                navigation.navigate('home');
               }}
             >
               <View style={styles.LogoArrowContainer}>

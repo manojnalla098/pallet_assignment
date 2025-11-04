@@ -1,4 +1,17 @@
 
+## API Details:-
+POST https://catalog-management-system-dev-ak3ogf6zeauc.a.run.app/cms/product/v2/filter/product
+Content-Type: application/json
+
+## APK Link:-
+https://drive.google.com/file/d/14hRmuShqHV6vYLhK3DgX-1C-raQrv5oJ/view?usp=drive_link
+
+## Video Link:-
+https://drive.google.com/file/d/1A0PMU50E-_rnTyTv_uLZAZEwKwW3pWZp/view?usp=drive_link
+
+## GitHub Repositories Link:-
+https://github.com/manojnalla098/pallet_assignment.git
+
 ## Setup & run instructions
 Prerequisites
 Node.js (>= 16)
@@ -75,15 +88,6 @@ Password :- 98765
 **Scanned Barcode Alert —** Displayed scanned barcode results using an alert popup.
 **Error Handling —** Implemented proper error handling for camera and scanning failures.
 
-## API Details:-
-## Original Endpoint (Not Used):-
-POST https://catalog-management-system-dev-ak3ogf6zeauc.a.run.app/cms/product/v2/filter/product
-Content-Type: application/json
-This API was not used because it was inactive during non-working hours.
-
-## Used Endpoint (For Testing):-
-GET https://api.escuelajs.co/api/v1/products
-This public API was used to fetch product data for development and testing purposes.
 
 ## Working Flow (Screens & Features):-
 
@@ -154,6 +158,6 @@ maxToRenderPerBatch, initialNumToRender, and windowSize – Controls rendering b
 **Camera Permission Handling —** Added runtime camera permission request and validation.
 **Test API Integration —** Used a testing API to simulate barcode-to-product matching (actual product matching API not implemented).
 **Flashlight Toggle —** Enabled flashlight control for low-light scanning environments.
-**Manual Barcode Entry —** Provided an option for users to manually enter barcode values.
+**Manual Barcode Entry —** Provided an option for users to manually enter barcode values .
 **Scanned Barcode Alert —** Displayed scanned barcode results using an alert popup.
 **Error Handling —** Implemented proper error handling for camera and scanning failures.

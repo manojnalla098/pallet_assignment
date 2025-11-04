@@ -4,7 +4,6 @@ import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getProduct } from '../redux/productSlice/ProductSlice';
 import { loginStart } from '../redux/authSlice/authSlice';
 import { loadCartFromStorage } from '../redux/cartSice/CartActions';
 import { loadWishlistFromStorage } from '../redux/wishlistSlice/WishlistAction';

@@ -25,7 +25,10 @@ function App() {
           <Stack.Screen name="home" component={HomeScreen} />
           <Stack.Screen name="ProductInfo" component={ProductInfoScreen} />
           <Stack.Screen name="Cart" component={CartScreen} />
-          <Stack.Screen name="barcodeScanner" component={BarcodeScannerScreen} />
+          <Stack.Screen
+            name="barcodeScanner"
+            component={BarcodeScannerScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>
